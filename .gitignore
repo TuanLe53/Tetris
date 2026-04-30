@@ -1,0 +1,47 @@
+# [Build & Output]
+# Bỏ qua thư mục out (thư mục build mặc định trong ảnh của bạn)
+out/
+build/
+bin/
+obj/
+
+# [Executable & Binaries]
+# Các file thực thi và thư viện liên kết động
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+
+# [External Libraries]
+# Bỏ qua bộ thư viện SFML đi kèm (thường quá nặng để đẩy lên Git)
+SFML-3.1.0/
+
+# [Environment & Secrets]
+# Theo yêu cầu trước đó của bạn, bỏ qua các file môi trường
+.env
+.env.*
+
+# [IDE - Visual Studio Code]
+.vscode/
+*.code-workspace
+
+# [IDE - Visual Studio]
+.vs/
+*.user
+*.userosscache
+*.sln
+*.vcxproj
+*.filters
+
+# [Operating System Systems]
+Thumbs.db
+.DS_Store
+
+# [CMake]
+# Thường chỉ bỏ qua các file cache, nhưng vì bạn dùng thư mục out/ 
+# nên các file này đa phần đã nằm trong đó.
+CMakeCache.txt
+CMakeFiles/
+CMakeSettings.json

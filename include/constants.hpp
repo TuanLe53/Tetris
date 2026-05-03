@@ -4,7 +4,7 @@
 #include <array>
 
 namespace Tetris {
-    enum class BlockType { O, I, L, N, T };
+    enum class BlockType { O, I, L, J, S, Z, T };
 
     using Matrix5x5 = std::array<std::array<int, 5>, 5>;
 
@@ -40,11 +40,31 @@ namespace Tetris {
             }}
         },
         {
-            BlockType::N,
+            BlockType::J,
+            {{
+                {0, 0, 0, 0, 0},
+                {0, 0, 1, 0, 0},
+                {0, 0, 2, 0, 0},
+                {0, 1, 1, 0, 0},
+                {0, 0, 0, 0, 0}
+            }}
+        },
+        {
+            BlockType::Z,
             {{
                 {0, 0, 0, 0, 0},
                 {0, 0, 0, 1, 0},
                 {0, 0, 2, 1, 0},
+                {0, 0, 1, 0, 0},
+                {0, 0, 0, 0, 0}
+            }}
+        },
+        {
+            BlockType::S,
+            {{
+                {0, 0, 0, 0, 0},
+                {0, 1, 0, 0, 0},
+                {0, 1, 2, 0, 0},
                 {0, 0, 1, 0, 0},
                 {0, 0, 0, 0, 0}
             }}

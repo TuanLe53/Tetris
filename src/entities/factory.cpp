@@ -11,7 +11,9 @@ void Factory::refilBag(){
         Tetris::BlockType::O, 
         Tetris::BlockType::I, 
         Tetris::BlockType::L,
-        Tetris::BlockType::N, 
+        Tetris::BlockType::J,
+        Tetris::BlockType::Z, 
+        Tetris::BlockType::S, 
         Tetris::BlockType::T
     };
     std::shuffle(bag.begin(), bag.end(), rng);

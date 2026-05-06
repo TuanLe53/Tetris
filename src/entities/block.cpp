@@ -1,16 +1,23 @@
 #include <entities/block.hpp>
 
-Block::Block(Tetris::BlockType type){
+Block::Block(Tetris::BlockType type) : sprite(texture) {
     this->type = type;
 
-    auto& shapeData = Tetris::SHAPES.at(type);
+    if (this->texture.loadFromFile("assets/graphics/block/purple_block.png")) {
+        this->sprite.setTexture(this->texture, true);
+        float scale = 50.f / 32.f;
+        this->sprite.setScale({scale, scale});
+    }else{
+        std::printf("Error: Could not load texture!\n");
+    }
 
+    auto& shapeData = Tetris::SHAPES.at(type);
     for (int i = 0; i < 5; ++i) {
         for (int j = 0; j < 5; ++j) {
             this->block[i][j] = shapeData[i][j];
-        };
-    };
-};
+        }
+    }
+}
 
 void Block::draw(sf::RenderTarget &target){
     float cellSize = 50.f;
@@ -21,8 +28,8 @@ void Block::draw(sf::RenderTarget &target){
                 float relativeX = (j - 2) * cellSize;
                 float relativeY = (i - 2) * cellSize;
 
-                square.setPosition({pivotPos.x + relativeX, pivotPos.y + relativeY});
-                target.draw(square);
+                sprite.setPosition({pivotPos.x + relativeX, pivotPos.y + relativeY});
+                target.draw(sprite);
             }
         }
     }

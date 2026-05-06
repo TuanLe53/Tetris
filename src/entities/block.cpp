@@ -3,7 +3,8 @@
 Block::Block(Tetris::BlockType type) : sprite(texture) {
     this->type = type;
 
-    if (this->texture.loadFromFile("assets/graphics/block/purple_block.png")) {
+    std::string path = Tetris::TEXTURE_PATHS.at(type);
+    if (this->texture.loadFromFile(path)) {
         this->sprite.setTexture(this->texture, true);
         float scale = 50.f / 32.f;
         this->sprite.setScale({scale, scale});
@@ -82,6 +83,11 @@ int Block::getCellValue(int i, int j) const{
 void Block::spawn(Tetris::BlockType type){
     this->type = type;
     this->pivotPos = {300.f, -150.f};
+
+    std::string path = Tetris::TEXTURE_PATHS.at(type);
+    if (this->texture.loadFromFile(path)) {
+        this->sprite.setTexture(this->texture, true);
+    }
 
     auto& shapeData = Tetris::SHAPES.at(type);
     for (int i = 0; i < 5; ++i) {

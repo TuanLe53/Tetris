@@ -8,6 +8,16 @@ namespace Tetris {
 
     using Matrix5x5 = std::array<std::array<int, 5>, 5>;
 
+    static inline std::map<BlockType, std::string> TEXTURE_PATHS = {
+        {BlockType::O, "assets/graphics/block/yellow_block.png"},
+        {BlockType::I, "assets/graphics/block/cyan_block.png"},
+        {BlockType::L, "assets/graphics/block/pink_block.png"},
+        {BlockType::J, "assets/graphics/block/blue_block.png"},
+        {BlockType::S, "assets/graphics/block/green_block.png"},
+        {BlockType::Z, "assets/graphics/block/red_block.png"},
+        {BlockType::T, "assets/graphics/block/purple_block.png"}
+    };
+
     static inline std::map<BlockType, Matrix5x5> SHAPES = {
         {
             BlockType::O,

@@ -7,14 +7,9 @@ class Block{
 private:
     Tetris::BlockType type;
     sf::Vector2f pivotPos = {300.f, -150.f};
-    int block[5][5] = {
-        {0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0}
-    };
-    sf::RectangleShape square{{50.f, 50.f}};
+    int block[5][5] = {0};
+    sf::Texture texture;
+    sf::Sprite sprite;
 public:
     Block(Tetris::BlockType type);
     void spawn(Tetris::BlockType type);

@@ -1,16 +1,24 @@
 #include <entities/block.hpp>
 
-Block::Block(Tetris::BlockType type){
+Block::Block(Tetris::BlockType type) : sprite(texture) {
     this->type = type;
 
-    auto& shapeData = Tetris::SHAPES.at(type);
+    std::string path = Tetris::TEXTURE_PATHS.at(type);
+    if (this->texture.loadFromFile(path)) {
+        this->sprite.setTexture(this->texture, true);
+        float scale = 50.f / 32.f;
+        this->sprite.setScale({scale, scale});
+    }else{
+        std::printf("Error: Could not load texture!\n");
+    }
 
+    auto& shapeData = Tetris::SHAPES.at(type);
     for (int i = 0; i < 5; ++i) {
         for (int j = 0; j < 5; ++j) {
             this->block[i][j] = shapeData[i][j];
-        };
-    };
-};
+        }
+    }
+}
 
 void Block::draw(sf::RenderTarget &target){
     float cellSize = 50.f;
@@ -21,8 +29,8 @@ void Block::draw(sf::RenderTarget &target){
                 float relativeX = (j - 2) * cellSize;
                 float relativeY = (i - 2) * cellSize;
 
-                square.setPosition({pivotPos.x + relativeX, pivotPos.y + relativeY});
-                target.draw(square);
+                sprite.setPosition({pivotPos.x + relativeX, pivotPos.y + relativeY});
+                target.draw(sprite);
             }
         }
     }
@@ -75,6 +83,11 @@ int Block::getCellValue(int i, int j) const{
 void Block::spawn(Tetris::BlockType type){
     this->type = type;
     this->pivotPos = {300.f, -150.f};
+
+    std::string path = Tetris::TEXTURE_PATHS.at(type);
+    if (this->texture.loadFromFile(path)) {
+        this->sprite.setTexture(this->texture, true);
+    }
 
     auto& shapeData = Tetris::SHAPES.at(type);
     for (int i = 0; i < 5; ++i) {

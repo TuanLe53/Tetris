@@ -4,9 +4,21 @@
 #include <entities/factory.hpp>
 #include <board.hpp>
 
-const float defaultSpeed = 0.7f;
 const float fastSpeed = 0.05f;
-float currentSpeed = defaultSpeed;
+float currentSpeed;
+float timer = 0;
+int linesCleared = 0;
+int level = 0;
+std::vector<float> gravityTable = {0.8f, 0.7f, 0.6f, 0.5f, 0.4f, 0.3f, 0.2f, 0.15f, 0.1f};
+
+void updateSpeed(){
+    level = linesCleared / 10;
+    if(level < gravityTable.size()){
+        currentSpeed = gravityTable[level];
+    }else{
+        currentSpeed = gravityTable.back();
+    }
+}
 
 int score = 0;
 Board board = Board();
@@ -17,13 +29,20 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode({1000, 1000}), "SFML works!");
     sf::Clock clock;
+    
+    updateSpeed();
 
     while (window.isOpen())
     {
+        float time = clock.restart().asSeconds();
+        timer += time;
+
         while (const std::optional event = window.pollEvent())
         {
-            if (event->is<sf::Event::Closed>())
+            if (event->is<sf::Event::Closed>()){
                 window.close();
+                std::printf("Your score: %d", score);
+            }
 
             if(const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
                 if (keyPressed->code == sf::Keyboard::Key::Left) {
@@ -49,10 +68,10 @@ int main()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
             currentSpeed = fastSpeed;
         } else {
-            currentSpeed = defaultSpeed;
+            updateSpeed();
         }
 
-        if(clock.getElapsedTime().asSeconds() >= currentSpeed){
+        if(timer > currentSpeed){
             block.moveDown();
 
             if (board.isCollision(block)) {
@@ -62,11 +81,12 @@ int main()
 
                 int lines = board.clearFullLines();
                 score += 50*lines;
+                linesCleared += lines;
 
                 block.spawn(nextType);
             }
 
-            clock.restart();
+            timer -= currentSpeed;
         }
 
         board.draw(window);

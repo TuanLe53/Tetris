@@ -23,13 +23,25 @@ void updateSpeed(){
 int score = 0;
 Board board = Board();
 Factory factory = Factory();
-Block block = Block(factory.nextBlockType());
+Block currentBlock = Block(factory.nextBlockType());
+Tetris::BlockType nextType = factory.nextBlockType();
+Block nextBlock = Block(nextType);
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode({1000, 1000}), "SFML works!");
     sf::Clock clock;
     
+    sf::Texture previewTexture("assets/graphics/UI/next.png");
+    sf::Sprite previewSprite(previewTexture);
+    float previewSize = 350.f;
+    sf::Vector2f previewPos(650.f, 650.f);
+    sf::Vector2f previewCenter(previewPos.x + previewSize / 2.f, previewPos.y + previewSize / 2.f);
+    previewSprite.setPosition(previewPos);
+    previewSprite.setScale({previewSize/192.f, previewSize/192.f});
+    
+    nextBlock.setPivotPos(previewCenter);
+
     updateSpeed();
 
     while (window.isOpen())
@@ -46,19 +58,19 @@ int main()
 
             if(const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
                 if (keyPressed->code == sf::Keyboard::Key::Left) {
-                    block.moveLeft();
-                    if (board.isWallCollision(block)) {
-                        block.moveRight();
+                    currentBlock.moveLeft();
+                    if (board.isWallCollision(currentBlock)) {
+                        currentBlock.moveRight();
                     }
                 }
                 if (keyPressed->code == sf::Keyboard::Key::Right) {
-                    block.moveRight();
-                    if (board.isWallCollision(block)) {
-                        block.moveLeft();
+                    currentBlock.moveRight();
+                    if (board.isWallCollision(currentBlock)) {
+                        currentBlock.moveLeft();
                     }
                 }
                 if(keyPressed->code == sf::Keyboard::Key::X){
-                    block.rotate();
+                    currentBlock.rotate();
                 }
             }
         }
@@ -72,25 +84,30 @@ int main()
         }
 
         if(timer > currentSpeed){
-            block.moveDown();
+            currentBlock.moveDown();
 
-            if (board.isCollision(block)) {
-                block.moveUp();
-                board.lockBlock(block);
-                Tetris::BlockType nextType = factory.nextBlockType();
+            if (board.isCollision(currentBlock)) {
+                currentBlock.moveUp();
+                board.lockBlock(currentBlock);
+
+                currentBlock.spawn(nextType);
+
+                nextType = factory.nextBlockType();
+                nextBlock.spawn(nextType);
+                nextBlock.setPivotPos(previewCenter);
 
                 int lines = board.clearFullLines();
                 score += 50*lines;
                 linesCleared += lines;
-
-                block.spawn(nextType);
             }
 
-            timer -= currentSpeed;
+            timer = 0;
         }
 
         board.draw(window);
-        block.draw(window);
+        window.draw(previewSprite);
+        currentBlock.draw(window);
+        nextBlock.draw(window);
 
         window.display();
     }

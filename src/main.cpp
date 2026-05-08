@@ -38,8 +38,8 @@ int main()
     sf::Texture previewTexture("assets/graphics/UI/next.png");
     sf::Sprite previewSprite(previewTexture);
 
-    float previewSize = 350.f;
-    sf::Vector2f previewPos(1100.f, 650.f);
+    float previewSize = 400.f;
+    sf::Vector2f previewPos(1100.f, 600.f);
     sf::Vector2f previewCenter(previewPos.x + previewSize / 2.f, previewPos.y + previewSize / 2.f);
     previewSprite.setPosition(previewPos);
     previewSprite.setScale({previewSize/192.f, previewSize/192.f});

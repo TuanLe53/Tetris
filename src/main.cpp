@@ -4,6 +4,9 @@
 #include <entities/factory.hpp>
 #include <board.hpp>
 
+const int WIDTH = 1500;
+const int HEIGHT = 1000;
+
 const float fastSpeed = 0.05f;
 float currentSpeed;
 float timer = 0;
@@ -29,7 +32,7 @@ Block nextBlock = Block(nextType);
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode({1000, 1000}), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode({WIDTH, HEIGHT}), "SFML works!");
     sf::Clock clock;
     
     sf::Texture previewTexture("assets/graphics/UI/next.png");

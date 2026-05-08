@@ -19,12 +19,12 @@ void Board::draw(sf::RenderTarget &target){
 
     for(int i = 0; i < ((width / 50) + 1); i++){
         sf::RectangleShape line({line_width, height});
-        line.setPosition({(float)i*50.f, 0.f});
+        line.setPosition({border_left + (float)i*50.f, 0.f});
         target.draw(line);
     }
     for(int i = 0; i < ((height / 50) + 1); i++){
         sf::RectangleShape line({width, line_width});
-        line.setPosition({0.f, (float)i*50.f});
+        line.setPosition({border_left, (float)i*50.f});
         target.draw(line);
     }
 }

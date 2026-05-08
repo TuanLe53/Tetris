@@ -46,6 +46,11 @@ int main()
     
     nextBlock.setPivotPos(previewCenter);
 
+    sf::Font font("assets/fonts/m6x11.ttf");
+    sf::Text text(font);
+    text.setCharacterSize(50);
+    text.setPosition({1200, 100});
+
     updateSpeed();
 
     while (window.isOpen())
@@ -81,6 +86,8 @@ int main()
 
         window.clear();
 
+        text.setString("Score: " + std::to_string(score));
+
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
             currentSpeed = fastSpeed;
         } else {
@@ -110,6 +117,7 @@ int main()
 
         board.draw(window);
         window.draw(previewSprite);
+        window.draw(text);
         currentBlock.draw(window);
         nextBlock.draw(window);
 

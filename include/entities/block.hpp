@@ -14,6 +14,7 @@ public:
     Block(Tetris::BlockType type);
     void spawn(Tetris::BlockType type);
     void draw(sf::RenderTarget &target);
+    void setPivotPos(sf::Vector2f pos);
 
     void rotate();
     void moveUp();

@@ -72,6 +72,10 @@ void Block::moveRight(){
     pivotPos.x += 50.f;
 };
 
+void Block::setPivotPos(sf::Vector2f pos){
+    pivotPos = pos;
+}
+
 sf::Vector2f Block::getPivotPos() const{
     return pivotPos;
 }

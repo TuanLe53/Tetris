@@ -11,7 +11,7 @@ void Board::draw(sf::RenderTarget &target){
     for (int i = 0; i < 13; i++) {
         for (int j = 0; j < 20; j++) {
             if (grid[i][j] != 0) {
-                cell.setPosition(sf::Vector2f(i * 50.f + 1.f, j * 50.f + 1.f));
+                cell.setPosition({border_left + i * 50.f + 1.f, j * 50.f + 1.f});
                 target.draw(cell);
             }
         }
@@ -19,12 +19,12 @@ void Board::draw(sf::RenderTarget &target){
 
     for(int i = 0; i < ((width / 50) + 1); i++){
         sf::RectangleShape line({line_width, height});
-        line.setPosition({(float)i*50.f, 0.f});
+        line.setPosition({border_left + (float)i*50.f, 0.f});
         target.draw(line);
     }
     for(int i = 0; i < ((height / 50) + 1); i++){
         sf::RectangleShape line({width, line_width});
-        line.setPosition({0.f, (float)i*50.f});
+        line.setPosition({border_left, (float)i*50.f});
         target.draw(line);
     }
 }
@@ -40,7 +40,7 @@ void Board::reset(){
 void Board::lockBlock(const Block& block){
     sf::Vector2f pos = block.getPivotPos();
 
-    int gridX = static_cast<int>(pos.x / 50.f);
+    int gridX = static_cast<int>((pos.x - border_left) / 50.f);
     int gridY = static_cast<int>(pos.y / 50.f);
 
     for (int i = 0; i < 5; i++) {
@@ -59,7 +59,7 @@ void Board::lockBlock(const Block& block){
 
 bool Board::isCollision(const Block& block) {
     sf::Vector2f pos = block.getPivotPos();
-    int gridX = static_cast<int>(pos.x / 50.f);
+    int gridX = static_cast<int>((pos.x - border_left) / 50.f);
     int gridY = static_cast<int>(pos.y / 50.f);
 
     for (int i = 0; i < 5; i++) {
@@ -72,8 +72,10 @@ bool Board::isCollision(const Block& block) {
                     return true;
                 }
 
-                if (targetY >= 0 && grid[targetX][targetY] != 0) {
-                    return true;
+                if (targetY >= 0 && targetX >= 0 && targetX < 13) {
+                    if(grid[targetX][targetY] != 0){
+                        return true;
+                    }
                 }
             }
         }
@@ -83,14 +85,12 @@ bool Board::isCollision(const Block& block) {
 
 bool Board::isWallCollision(const Block &block){
     sf::Vector2f pos = block.getPivotPos();
-    int gridX = static_cast<int>(pos.x / 50.f);
-    int gridY = static_cast<int>(pos.y / 50.f);
+    int gridX = static_cast<int>((pos.x - border_left) / 50.f);
 
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 5; j++) {
             if (block.getCellValue(i, j) != 0){
                 int targetX = gridX + (j - 2);
-                int targetY = gridY + (i - 2);
 
                 if (targetX < 0 || targetX >= 13) {
                     return true;

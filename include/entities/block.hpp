@@ -6,7 +6,7 @@
 class Block{
 private:
     Tetris::BlockType type;
-    sf::Vector2f pivotPos = {300.f, -150.f};
+    sf::Vector2f pivotPos = {700.f, -100.f};
     int block[5][5] = {0};
     sf::Texture texture;
     sf::Sprite sprite;

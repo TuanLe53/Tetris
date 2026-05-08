@@ -9,6 +9,8 @@ private:
     float width = 650.f;
     float height = 1000.f;
     float line_width = 1.f;
+    float border_left = 400;
+    float border_right = 1050;
 public:
     Board();
     void draw(sf::RenderTarget &target);

@@ -11,16 +11,41 @@ const float fastSpeed = 0.05f;
 float currentSpeed;
 float timer = 0;
 int linesCleared = 0;
-int level = 0;
+int level = 1;
 std::vector<float> gravityTable = {0.8f, 0.7f, 0.6f, 0.5f, 0.4f, 0.3f, 0.2f, 0.15f, 0.1f};
 
 void updateSpeed(){
     level = linesCleared / 10;
+    if(level < 1){
+        level = 1;
+    }
+
     if(level < gravityTable.size()){
         currentSpeed = gravityTable[level];
     }else{
         currentSpeed = gravityTable.back();
     }
+}
+
+int calculateScore(int linesCleared, int currentLevel){
+    int baseScore = 0;
+
+    switch(linesCleared){
+        case 1:
+            baseScore = 100;
+            break;
+        case 2:
+            baseScore = 300;
+            break;
+        case 3:
+            baseScore = 500;
+            break;
+        case 4:
+            baseScore = 1200;
+            break;
+    }
+
+    return baseScore * currentLevel;
 }
 
 int score = 0;
@@ -108,7 +133,7 @@ int main()
                 nextBlock.setPivotPos(previewCenter);
 
                 int lines = board.clearFullLines();
-                score += 50*lines;
+                score += calculateScore(lines, level);;
                 linesCleared += lines;
             }
 

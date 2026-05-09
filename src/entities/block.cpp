@@ -84,6 +84,10 @@ int Block::getCellValue(int i, int j) const{
     return block[i][j];
 }
 
+Tetris::BlockType Block::getType() const{
+    return type;
+}
+
 void Block::spawn(Tetris::BlockType type){
     this->type = type;
     this->pivotPos = {700.f, -100.f};

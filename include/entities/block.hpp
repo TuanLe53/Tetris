@@ -24,4 +24,5 @@ public:
 
     sf::Vector2f getPivotPos() const;
     int getCellValue(int i, int j) const;
+    Tetris::BlockType getType() const;
 };

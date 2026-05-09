@@ -4,7 +4,7 @@
 #include <entities/factory.hpp>
 #include <board.hpp>
 
-const int WIDTH = 1500;
+const int WIDTH = 1550;
 const int HEIGHT = 1000;
 
 const float fastSpeed = 0.05f;
@@ -55,21 +55,33 @@ Block currentBlock = Block(factory.nextBlockType());
 Tetris::BlockType nextType = factory.nextBlockType();
 Block nextBlock = Block(nextType);
 
+std::optional<Tetris::BlockType> heldType;
+Block heldBlock(Tetris::BlockType::I);
+bool canHold = true;
+
 int main()
 {
     sf::RenderWindow window(sf::VideoMode({WIDTH, HEIGHT}), "Tetris!");
     sf::Clock clock;
     
-    sf::Texture previewTexture("assets/graphics/UI/next.png");
-    sf::Sprite previewSprite(previewTexture);
+    float boxSize = 400.f;
 
-    float previewSize = 400.f;
-    sf::Vector2f previewPos(1100.f, 600.f);
-    sf::Vector2f previewCenter(previewPos.x + previewSize / 2.f, previewPos.y + previewSize / 2.f);
-    previewSprite.setPosition(previewPos);
-    previewSprite.setScale({previewSize/192.f, previewSize/192.f});
+    sf::Vector2f previewBoxPos(1150.f, 600.f);
+    sf::Vector2f previewBoxCenter(previewBoxPos.x + boxSize / 2.f, previewBoxPos.y + boxSize / 2.f);
+    sf::Texture previewBoxTexture("assets/graphics/UI/next.png");
+    sf::Sprite previewBoxSprite(previewBoxTexture);
+    previewBoxSprite.setPosition(previewBoxPos);
+    previewBoxSprite.setScale({boxSize/192.f, boxSize/192.f});
     
-    nextBlock.setPivotPos(previewCenter);
+    nextBlock.setPivotPos(previewBoxCenter);
+
+    sf::Vector2f holdBoxPos(0.f, 600.f);
+    sf::Vector2f holdBoxCenter(holdBoxPos.x + boxSize / 2.f,holdBoxPos.y + boxSize / 2.f);
+    sf::Texture holdBoxTexture("assets/graphics/UI/hold.png");
+    sf::Sprite holdBoxSprite(holdBoxTexture);
+    holdBoxSprite.setPosition(holdBoxPos);
+    holdBoxSprite.setScale({boxSize/192.f, boxSize/192.f});
+
 
     sf::Font font("assets/fonts/m6x11.ttf");
     sf::Text text(font);
@@ -106,6 +118,28 @@ int main()
                 if(keyPressed->code == sf::Keyboard::Key::X){
                     currentBlock.rotate();
                 }
+                if(keyPressed->code == sf::Keyboard::Key::C){
+                    Tetris::BlockType currentType = currentBlock.getType();
+
+                    if(!heldType.has_value()){
+                        heldType = currentType;
+                        currentBlock.spawn(nextType);
+
+                        nextType = factory.nextBlockType();
+                        nextBlock.spawn(nextType);
+                        nextBlock.setPivotPos(previewBoxCenter);
+                    }else{
+                        Tetris::BlockType temp = *heldType;
+                        heldType = currentType;
+                        currentBlock.spawn(temp);
+                    }
+
+                    heldBlock.spawn(*heldType);
+                    heldBlock.setPivotPos(holdBoxCenter);
+
+                    canHold = false;
+                    timer = 0;
+                }
             }
         }
 
@@ -126,14 +160,16 @@ int main()
                 currentBlock.moveUp();
                 board.lockBlock(currentBlock);
 
+                canHold = true;
+
                 currentBlock.spawn(nextType);
 
                 nextType = factory.nextBlockType();
                 nextBlock.spawn(nextType);
-                nextBlock.setPivotPos(previewCenter);
+                nextBlock.setPivotPos(previewBoxCenter);
 
                 int lines = board.clearFullLines();
-                score += calculateScore(lines, level);;
+                score += calculateScore(lines, level);
                 linesCleared += lines;
             }
 
@@ -141,8 +177,14 @@ int main()
         }
 
         board.draw(window);
-        window.draw(previewSprite);
+
+        window.draw(previewBoxSprite);
+        window.draw(holdBoxSprite);
         window.draw(text);
+        if (heldType.has_value()) {
+            heldBlock.draw(window);
+        }
+
         currentBlock.draw(window);
         nextBlock.draw(window);
 

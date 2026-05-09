@@ -119,26 +119,28 @@ int main()
                     currentBlock.rotate();
                 }
                 if(keyPressed->code == sf::Keyboard::Key::C){
-                    Tetris::BlockType currentType = currentBlock.getType();
-
-                    if(!heldType.has_value()){
-                        heldType = currentType;
-                        currentBlock.spawn(nextType);
-
-                        nextType = factory.nextBlockType();
-                        nextBlock.spawn(nextType);
-                        nextBlock.setPivotPos(previewBoxCenter);
-                    }else{
-                        Tetris::BlockType temp = *heldType;
-                        heldType = currentType;
-                        currentBlock.spawn(temp);
+                    if(canHold){
+                        Tetris::BlockType currentType = currentBlock.getType();
+    
+                        if(!heldType.has_value()){
+                            heldType = currentType;
+                            currentBlock.spawn(nextType);
+    
+                            nextType = factory.nextBlockType();
+                            nextBlock.spawn(nextType);
+                            nextBlock.setPivotPos(previewBoxCenter);
+                        }else{
+                            Tetris::BlockType temp = *heldType;
+                            heldType = currentType;
+                            currentBlock.spawn(temp);
+                        }
+    
+                        heldBlock.spawn(*heldType);
+                        heldBlock.setPivotPos(holdBoxCenter);
+    
+                        canHold = false;
+                        timer = 0;
                     }
-
-                    heldBlock.spawn(*heldType);
-                    heldBlock.setPivotPos(holdBoxCenter);
-
-                    canHold = false;
-                    timer = 0;
                 }
             }
         }
